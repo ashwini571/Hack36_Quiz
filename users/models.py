@@ -20,6 +20,7 @@ class Profile(models.Model):
     college = models.CharField(max_length = 50)
     # degree = models.CharField(max_length =30)
     bio = models.TextField()
+    role = models.CharField(default='client' ,max_length=20)
 # class role(forms.ModelForm):
 #     role= forms.ChoiceField(widget=forms.RadioSelect, choices=USER_ROLE)
 

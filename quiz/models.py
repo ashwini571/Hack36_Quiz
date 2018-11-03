@@ -16,6 +16,7 @@ class Quiz(models.Model):
     negative = models.PositiveIntegerField(default=0)
     duration = models.DurationField(default= timedelta())
     tags=models.TextField(max_length=2000)
+    users_appeared = models.ManyToManyField(User, blank=True, related_name='users_appeared')
 
     def __str__(self):
             return self.name

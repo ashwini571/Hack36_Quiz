@@ -81,15 +81,23 @@ def start_quiz(request):
 
 def quiz_auth(request, quizid):
     item = Quiz.objects.get(Quiz_id=quizid)
-    if item.Test_Password == request.POST['password']:
-        request.session['username'] = quizid
+    users=item.users_appeared.filter(pk=request.user.pk)
 
-        return redirect('test/'+ str(quizid))
-    else:
-
-        # return render(request, 'start', {'error': 'Invalid Credentials!'})
-        messages.info(request, 'Invalid Credentials')
+    if users.exists():
+        messages.info(request, 'You already appeared in this Quiz')
         return redirect('dashboard')
+    else:    
+        if item.Test_Password == request.POST['password']:
+            request.session['username'] = quizid
+            if request.user.profile.role == 'client':
+               item.users_appeared.add(request.user)
+
+            return redirect('test/'+ str(quizid))
+        else:
+    
+            # return render(request, 'start', {'error': 'Invalid Credentials!'})
+            messages.info(request, 'Invalid Credentials')
+            return redirect('dashboard')
 
 def clean(f):
     data = list()
