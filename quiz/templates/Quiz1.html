@@ -23,7 +23,7 @@
                 <div class="" style="text-align: left;padding-top: 3px;font-size:2rem;font-family: ''Josefin Slab', serif', cursive;color: #f5f6fa ;display: none" id="forcookie_user">{{ user }}</div>
                 <!--End cookies-->
 
-     <div class="container-fluid " style="background-color:#5042f4;max-width: 100%;height: 50px;" id="nav">
+     <div class="container-fluid " style="background-color:#5042f4;max-width: 100%;" id="nav">
             <div class="row justify-content-around" >
                 <div class="col-md-9" style="text-align: left;padding-top: 3px;font-size:2rem;font-family: 'Monoton', cursive;color: #f5f6fa"> QuizOholic</div>
 
@@ -32,10 +32,10 @@
         </div>
         <div class="container-fluid" style="background-color: #f1f2f6; position: relative;" id="sec_nav">
             <div class="row" style="padding-top: 12px padding-left:7px">
-                <div class="col-md-10 " style="padding-top:15px; font-family:Cabin Sketch; "><h2 style="padding-left:20px;"><u>{{quiz_object.name}}</u></h2></div>
-                <div class="col-md-2">
+                <div class="col-md-9 " style="padding-top:15px; font-family:Cabin Sketch; "><h2 style="padding-left:20px;"><u>{{quiz_object.name}}</u></h2></div>
+                <div class="col-md-3">
                <form name="quiz" action="{% url 'calculate_score' quizid=quiz_object.Quiz_id %}" method="POST">
-            {% csrf_token %}  <button type="submit" class="btn-hover color-10" id="endtest" >End Test</button>
+            {% csrf_token %}  <button type="submit" class="btn-hover color-10"  id="endtest" >End Test</button>
                </form> </div>
             </div>
 
