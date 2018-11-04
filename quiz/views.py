@@ -27,17 +27,6 @@ def search(request):
         messages.error(request, 'Quiz does not exists!')
         return render(request,'dashboard.html')
 
-
-def mail(address, qid, pwd):
-    html_content = '<br><p><b>Quiz Id : {{qid}}</b></p><br><p><b>Quiz Password : {{pwd}}</b></p><br><p>Kindly Share these details to the Quiz Aspirants.</p>'
-    send_mail(
-        'Credentials of Quiz created using QuizOholic',
-        'The credentials for the Quiz you created are as follows: ',
-        'raj.anand.rohit@gmail.com',
-        ['{{address}}'],
-        fail_silently=False,
-    )
-
 def timer(request):
     return render(request,'indexTimer.html')
 def home(request):
@@ -169,6 +158,7 @@ def create_answer_table(quiz_object, question_objects, user_object):
         ans.correct_choice = question_object.correct
         ans.save()
     return
+
 @login_required(login_url = '/accounts/login')
 def score(request, quizid):
     del request.session['username']
@@ -250,20 +240,27 @@ def edit_quiz(request, quizid):
     # if error:
     #    print(error)
     return render(request, 'editquiz.html', {'quiz_object': item, 'quiz_data': querys })
+
 @login_required(login_url = '/accounts/login')
 def quizadmin(request):
     user = request.user
-    quiz_objects = Quiz.objects.filter(quizmaster= user)
-    scores = []
-    for quiz_object in quiz_objects:
-        quiz_score = Score.objects.filter(quiz=quiz_object).order_by('-obtained')
-        print(quiz_score)
-        scores.append(quiz_score)
-    return render(request, 'quizadmin.html', {'user': user, 'quiz_objects': quiz_objects, 'scores': scores})
+    if user.profile.role == 'admin':
+        quiz_objects = Quiz.objects.filter(quizmaster= user)
+        scores = []
+        for quiz_object in quiz_objects:
+            quiz_score = Score.objects.filter(quiz=quiz_object).order_by('-obtained')
+            print(quiz_score)
+            scores.append(quiz_score)
+        return render(request, 'quizadmin.html', {'user': user, 'quiz_objects': quiz_objects, 'scores': scores})
+    else:
+        messages.info(request, 'You do not have the permissions required to view the admin-panel')
+        return redirect('dashboard')
+
 def leaderboard(request, quizid):
     quiz_object = get_object_or_404(Quiz, Quiz_id = quizid)
     score = Score.objects.filter(quiz=quiz_object).order_by('-obtained')
     return render(request,'leaderboard.html', {'quiz_object': quiz_object, 'scores': score})
+
 def export(request, quizid):
     user = request.user
     quiz_object = get_object_or_404(Quiz, Quiz_id = quizid)

@@ -121,7 +121,7 @@ def change_password(request):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)  # Logs out from all active sessions
+            update_session_auth_hash(request, user)  # Updates all active sessions
             messages.success(request, 'Your password was successfully updated!')
             return redirect('logout')
         else:
