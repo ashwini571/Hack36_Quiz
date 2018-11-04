@@ -8,6 +8,8 @@ from quiz.models import Quiz,Score
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from .models import Profile
 import os
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 def signup(request):
@@ -107,9 +109,27 @@ def dash(request):
         item = paginator.get_page(paginator.num_pages)
 
     return render(request, 'dashboard.html', {'quiz_object': item})
+
 def public_profile(request, username):
     user = get_object_or_404(User, username = username)
     data = Score.objects.filter(applicant=user)
     return render(request, 'publicprofile.html', {'person': user, 'scores': data})
+
+@login_required(login_url = '/accounts/login')
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Logs out from all active sessions
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('logout')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'registration/change_password.html', {
+        'form': form
+    })
     
     
