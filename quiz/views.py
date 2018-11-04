@@ -27,17 +27,6 @@ def search(request):
         messages.error(request, 'Quiz does not exists!')
         return render(request,'dashboard.html')
 
-
-def mail(address, qid, pwd):
-    html_content = '<br><p><b>Quiz Id : {{qid}}</b></p><br><p><b>Quiz Password : {{pwd}}</b></p><br><p>Kindly Share these details to the Quiz Aspirants.</p>'
-    send_mail(
-        'Credentials of Quiz created using QuizOholic',
-        'The credentials for the Quiz you created are as follows: ',
-        'raj.anand.rohit@gmail.com',
-        ['{{address}}'],
-        fail_silently=False,
-    )
-
 def timer(request):
     return render(request,'indexTimer.html')
 def home(request):
@@ -112,53 +101,58 @@ def clean(f):
 
 @login_required(login_url = '/accounts/login')
 def create(request):
-    if request.method == 'POST':
-        # form is submitted
-        quiz_form = QuizForm(request.POST, request.FILES, request.user)
-        if quiz_form.is_valid:
-            item = Quiz()
-            try:
-                qu = Quiz.objects.get(Quiz_id = request.POST['Quiz_id'])
-                create_quiz_form = QuizForm()
-                return render(request, 'create_quiz.html', {'quiz_form': create_quiz_form, 'error': "Quiz id is already taken! "})
-            except Quiz.DoesNotExist:
-                item.name = request.POST['name']
-                item.csv_file = request.FILES['csv_file']
-                item.about = request.POST['about']
-                item.Quiz_id=request.POST['Quiz_id']
-                item.Test_Password=request.POST['Test_Password']
-                item.instructions = request.POST['instructions']
-                item.positive = request.POST['positive']
-                item.negative = request.POST['negative']
-                item.duration = request.POST['duration']
-                item.quizmaster = request.user
-                item.tags=request.POST['tags']
-                item.save()
-                url = item.csv_file.url
-                l = url.split('/')
-                s = "\\"
-                s = s.join(l)
-                f = os.getcwd() + s
-                data = clean(f)
-                for row in data:
-                    ques = Question()
-                    ques.quiz = item
-                    ques.question = row[0]
-                    ques.a = row[1]
-                    ques.b = row[2]
-                    ques.c = row[3]
-                    ques.d = row[4]
-                    ques.correct = row[5]
-                    ques.save()
+    user = request.user
+    if user.profile.role == 'admin':
+        if request.method == 'POST':
+            # form is submitted
+            quiz_form = QuizForm(request.POST, request.FILES, request.user)
+            if quiz_form.is_valid:
+                item = Quiz()
+                try:
+                    qu = Quiz.objects.get(Quiz_id = request.POST['Quiz_id'])
+                    create_quiz_form = QuizForm()
+                    return render(request, 'create_quiz.html', {'quiz_form': create_quiz_form, 'error': "Quiz id is already taken! "})
+                except Quiz.DoesNotExist:
+                    item.name = request.POST['name']
+                    item.csv_file = request.FILES['csv_file']
+                    item.about = request.POST['about']
+                    item.Quiz_id=request.POST['Quiz_id']
+                    item.Test_Password=request.POST['Test_Password']
+                    item.instructions = request.POST['instructions']
+                    item.positive = request.POST['positive']
+                    item.negative = request.POST['negative']
+                    item.duration = request.POST['duration']
+                    item.quizmaster = request.user
+                    item.tags=request.POST['tags']
+                    item.save()
+                    url = item.csv_file.url
+                    # l = url.split('/')
+                    # s = "\\"
+                    # s = s.join(l)
+                    f = os.getcwd() + url
+                    data = clean(f)
+                    for row in data:
+                        ques = Question()
+                        ques.quiz = item
+                        ques.question = row[0]
+                        ques.a = row[1]
+                        ques.b = row[2]
+                        ques.c = row[3]
+                        ques.d = row[4]
+                        ques.correct = row[5]
+                        ques.save()
 
-                messages.info(request,'Your Quiz has been submitted successfully. Share the credentials and start   quizzing!')
-                return redirect('/quiz/test/edit/' + item.Quiz_id)
+                    messages.info(request,'Your Quiz has been submitted successfully. Share the credentials and start   quizzing!')
+                    return redirect('/quiz/test/edit/' + item.Quiz_id)
+            else:
+                messages.error(request, 'Please correct the error below.')
         else:
-            messages.error(request, 'Please correct the error below.')
+            # get request. We have to return the form so that user can fill it.
+            create_quiz_form = QuizForm()
+            return render(request, 'create_quiz.html', {'quiz_form': create_quiz_form})
     else:
-        # get request. We have to return the form so that user can fill it.
-        create_quiz_form = QuizForm()
-        return render(request, 'create_quiz.html', {'quiz_form': create_quiz_form})
+        messages.info(request, 'You do not have the permissions required create a quiz')
+        return redirect('dashboard')
 
 def create_answer_table(quiz_object, question_objects, user_object):
     for question_object in question_objects:
@@ -169,6 +163,7 @@ def create_answer_table(quiz_object, question_objects, user_object):
         ans.correct_choice = question_object.correct
         ans.save()
     return
+
 @login_required(login_url = '/accounts/login')
 def score(request, quizid):
     del request.session['username']
@@ -231,39 +226,56 @@ def conduct_quiz(request, quizid):
                 shuffle(querys)
 
         return render(request, 'Quiz1.html', {'quiz_object': item, 'quiz_data': querys, 'user':aspirant})
+
 @login_required(login_url = '/accounts/login')
 def edit_quiz(request, quizid):
     aspirant = request.user
-    item = get_object_or_404(Quiz, Quiz_id=quizid)
-    data = Question.objects.filter(quiz = item)
-    if request.method == 'POST':
-        if aspirant == item.quizmaster:
-            ques = get_object_or_404(Question, id=request.POST.get('question_id'))
-            ques.image = request.POST.get('img')
-            ques.code = request.POST.get('code')
-            ques.save()
-        else:
-            error = 'You do not have the required Permissions.'
-    querys = []
-    for thing in data:
-        querys.append(thing)
-    # if error:
-    #    print(error)
-    return render(request, 'editquiz.html', {'quiz_object': item, 'quiz_data': querys })
+    if aspirant.profile.role == 'admin':
+        item = get_object_or_404(Quiz, Quiz_id=quizid)
+        data = Question.objects.filter(quiz = item)
+        if request.method == 'POST':
+            if aspirant == item.quizmaster:
+                ques = get_object_or_404(Question, id=request.POST.get('question_id'))
+                ques.image = request.POST.get('img')
+                ques.code = request.POST.get('code')
+                ques.save()
+            else:
+                error = 'You do not have the required Permissions.'
+        querys = []
+        for thing in data:
+            querys.append(thing)
+        # if error:
+        #    print(error)
+        return render(request, 'editquiz.html', {'quiz_object': item, 'quiz_data': querys })
+    else:
+        messages.info(request, 'You do not have the permissions required to edit this quiz')
+        return redirect('dashboard')
+
 @login_required(login_url = '/accounts/login')
 def quizadmin(request):
     user = request.user
-    quiz_objects = Quiz.objects.filter(quizmaster= user)
-    scores = []
-    for quiz_object in quiz_objects:
-        quiz_score = Score.objects.filter(quiz=quiz_object).order_by('-obtained')
-        print(quiz_score)
-        scores.append(quiz_score)
-    return render(request, 'quizadmin.html', {'user': user, 'quiz_objects': quiz_objects, 'scores': scores})
+    if user.profile.role == 'admin':
+        quiz_objects = Quiz.objects.filter(quizmaster= user)
+        scores = []
+        for quiz_object in quiz_objects:
+            quiz_score = Score.objects.filter(quiz=quiz_object).order_by('-obtained')
+            print(quiz_score)
+            scores.append(quiz_score)
+        return render(request, 'quizadmin.html', {'user': user, 'quiz_objects': quiz_objects, 'scores': scores})
+    else:
+        messages.info(request, 'You do not have the permissions required to view the admin-panel')
+        return redirect('dashboard')
+
 def leaderboard(request, quizid):
-    quiz_object = get_object_or_404(Quiz, Quiz_id = quizid)
-    score = Score.objects.filter(quiz=quiz_object).order_by('-obtained')
-    return render(request,'leaderboard.html', {'quiz_object': quiz_object, 'scores': score})
+    user = request.user
+    if user.profile.role == 'admin':
+        quiz_object = get_object_or_404(Quiz, Quiz_id = quizid)
+        score = Score.objects.filter(quiz=quiz_object).order_by('-obtained')
+        return render(request,'leaderboard.html', {'quiz_object': quiz_object, 'scores': score})
+    else:
+        messages.info(request, 'You do not have the permissions required to view the admin-panel')
+        return redirect('dashboard')
+
 def export(request, quizid):
     user = request.user
     quiz_object = get_object_or_404(Quiz, Quiz_id = quizid)

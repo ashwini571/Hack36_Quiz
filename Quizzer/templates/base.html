@@ -71,8 +71,10 @@ font-family: 'Monoton', cursive;
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item nav-link nav-item" href="{% url 'profile' %}">Profile</a>
-                    <a class="dropdown-item nav-link nav-item" href="{% url 'dashboard' %}">Dashboard</a>
+                    <a class="dropdown-item nav-link nav-item" href="{% url 'dashboard' %}">Dashboard</a>  
+                  {% if user.profile.role == 'admin' %}
                     <a class="dropdown-item nav-link nav-item" href="{% url 'admin-panel' %}">Admin Panel</a>
+                  {% endif %}
                     <a class="dropdown-item nav-link nav-item" href="{% url 'edit_profile' %}">Edit Profile</a>
                     <a class="dropdown-item nav-link nav-item" href="{% url 'change_password' %}">Change Password</a>
                     <a class="dropdown-item nav-link nav-item" href="javascript:{document.getElementById('logout').submit()}">Log Out</a>

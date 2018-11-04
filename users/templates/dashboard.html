@@ -5,17 +5,14 @@
 Quizzer|Dashboard
 {% endblock %}
 
+{%if user.is_authenticated %}
 {% block content %}
 
     <br/>
     <br>
     <br>
     <div class="container">
-{#    {% if messages %}#}
-{#        <div class="alert alert-success">#}
-{#  {{ message }}#}
-{#     </div>#}
-{#        {{ endif }}#}
+
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-success alert-dismissable">
@@ -27,9 +24,9 @@ Quizzer|Dashboard
     {% endfor %}
 </ul>
 {% endif %}
+<div class="container">
 <div class="row">
-
-
+{% if user.profile.role == 'admin' %}
         <div class="col-md">
             <button href="" class="btn-hover color-9   btn-block btn-huge" data-toggle="modal" data-target="#myModal">Start A Quiz</button>
         </div>
@@ -37,6 +34,15 @@ Quizzer|Dashboard
         <div class="col-md">
             <button onclick="window.location.href='{% url 'create_quiz' %}'" class="btn-hover color-9   btn-block btn-huge">Create a Quiz</button>
         </div>
+{% else %}
+    <div class="col-3">
+        &nbsp;
+    </div>
+    <div class="col-6 justify-content-center">
+        <button href="" class="btn-hover color-9  btn-block btn-huge" data-toggle="modal" data-target="#myModal">Start A Quiz</button>
+    </div>
+{% endif %}
+</div>
 </div>
         <br>
         <br>
@@ -66,7 +72,7 @@ Quizzer|Dashboard
               <form action="{% url 'search' %}" method="get">
                <div class="form-inline">
               <input type="text" placeholder="Search.." name="search" class="form-control">
-                <button class="btn btn-outline-secondary" style="" ><i class="fa fa-search"></i></input>
+                <button class="btn btn-outline-secondary" style="" ><i class="fa fa-search"></i></button>
                </form>
               </div>
             </div>
@@ -158,6 +164,7 @@ Quizzer|Dashboard
 
 
 {% endblock %}
+{% endif %}
 {% block js_extra %}
 
 <!--<script type="text/javascript">-->
