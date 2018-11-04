@@ -14,14 +14,16 @@ def search(request):
     try:
         q = request.GET['search']
         print(q)
-        quiz_byname= Quiz.objects.filter(name__icontains=q)
-        quiz_bytag =Quiz.objects.filter(tags__icontains=q)
-        quiz=[]
-        for list in quiz_byname:
-            quiz.append(list)
-        for list in quiz_bytag:
-            quiz.append(list)
-        # print(quiz_bytag)
+        if q!='':
+
+            quiz_byname= Quiz.objects.filter(name__icontains=q)
+            quiz_bytag =Quiz.objects.filter(tags__icontains=q)
+            quiz=[]
+            for list in quiz_byname:
+                quiz.append(list)
+            for list in quiz_bytag:
+                quiz.append(list)
+            # print(quiz_bytag)
         return render(request,'dashboard.html', {'quiz_object':quiz})
     except:
         messages.error(request, 'Quiz does not exists!')
