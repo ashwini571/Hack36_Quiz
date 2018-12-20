@@ -10,7 +10,16 @@ from .models import Profile
 import os
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+def destroy_prev_session(request):
 
+    user = User.objects.get(username = request.POST['username'])
+    user.profile.flag = False
+    user.profile.save()
+   #The below line disables the user in order to login properly this must be set back again to true
+    user.is_active = False
+    user.save()
+
+    return render(request, 'home.html')
 
 def signup(request):
     if request.method == 'POST':
@@ -72,27 +81,44 @@ def profile(request):
 
 def login(request):
     if request.method == 'POST':
+        #This is to handle the case when the user is disabled for having multiple session
+        user =     user = User.objects.get(username = request.POST['username'])
+        if user.is_active == False:
+            user.is_active = True
+            user.save()
         user = auth.authenticate(username = request.POST['username'], password= request.POST['password'])
-        if user is not None:
-            auth.login(request, user)
-            item=Quiz.objects.all().order_by('name')
-            paginator = Paginator(item, 5)  # Show 1o quizzes per page
-            page = request.GET.get('page', 1)
-            try:
-                item = paginator.get_page(page)
-            except PageNotAnInteger:
-                item = paginator.get_page(1)
-            except EmptyPage:
-                item = paginator.get_page(paginator.num_pages)
 
-            return render(request,'dashboard.html',{'quiz_object':item})
+
+        if user is not None:
+            if user.profile.flag==True:
+                return render(request,'session_prevent.html',{'userroot':user.username})
+            else:
+
+                user.profile.flag=True
+                user.profile.save()
+                auth.login(request, user)
+
+                item=Quiz.objects.all().order_by('name')
+                paginator = Paginator(item, 5)  # Show 1o quizzes per page
+                page = request.GET.get('page', 1)
+                try:
+                    item = paginator.get_page(page)
+                except PageNotAnInteger:
+                    item = paginator.get_page(1)
+                except EmptyPage:
+                    item = paginator.get_page(paginator.num_pages)
+
+                return render(request,'dashboard.html',{'quiz_object':item})
         else:
-            return render(request, 'base.html', {'error': 'Invalid Credentials! Please enter correct username and password.'})
+            return render(request, 'home.html', {'error': 'Invalid Credentials! Please enter correct username and password.'})
     else:
         return redirect('dashboard')
 
 def logout(request):
     if request.method == 'POST':
+        user = request.user
+        user.profile.flag = False
+        user.profile.save()
         auth.logout(request)
         return render(request,'home.html')
 

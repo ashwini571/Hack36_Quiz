@@ -15,6 +15,7 @@ import datetime, os
 # )
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    flag = models.BooleanField(default = False)
     profilepic = models.ImageField(upload_to = 'profile/', blank=True)
     DOB = models.DateField(('Date'), default= datetime.date.today)
     college = models.CharField(max_length = 50)

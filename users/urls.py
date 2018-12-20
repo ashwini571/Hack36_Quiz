@@ -9,9 +9,8 @@ urlpatterns = [
     path('profile', views.profile, name ='profile'),
     path('dashboard', views.dash, name='dashboard'),
     path('edit_profile', views.update_profile, name='edit_profile'),
-    path('edit_profile', views.update_profile, name='edit_profile'),
     path('profile/<slug:username>', views.public_profile, name='profile'),
-
+    path('login/remove_session',views.destroy_prev_session,name='destroy_prev_session'),
     # password reset urls
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),

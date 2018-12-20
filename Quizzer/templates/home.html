@@ -4,7 +4,7 @@
     {% load staticfiles %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Product hunt clone: For development and practice purposes only">
+
     <meta name="author" content="Binary_compatible">
           <!--<link href="https://fonts.googleapis.com/css?family=Patua+One" rel="stylesheet">-->
         <!--<link href="https://fonts.googleapis.com/css?family=Crete+Round" rel="stylesheet">-->
@@ -132,8 +132,18 @@ background-image: url("https://www.transparenttextures.com/patterns/crissxcross.
     </div>
     </header>
 
+
 <div class="container " style="background-color:;   max-width:100%">
 
+{% if error %}
+
+        <div class="alert alert-success alert-dismissable">
+    <strong>
+        {{ error}}
+</strong>
+          <button type="button" class="close" data-dismiss="alert" >&times;</button>
+        </div>
+{% endif %}
 
         <div class="row justify-content-center" style="text-align: center;padding-top: 100px">
             <h1  style="font-size: 70px;font-family:'Barrio', cursive; margin">Wecome to QuizOholic</h1>
