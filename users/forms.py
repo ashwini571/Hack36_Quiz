@@ -8,9 +8,9 @@ class UserForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'email',)
 
         widgets = {
-            'first_name' : forms.TextInput(attrs={'class':'form-control col-3'}),
-            'last_name' : forms.TextInput(attrs={'class':'form-control col-3'}),
-            'email' : forms.TextInput(attrs={'class':'form-control col-3'}),
+            'first_name' : forms.TextInput(attrs={'class':'form-control '}),
+            'last_name' : forms.TextInput(attrs={'class':'form-control'}),
+            'email' : forms.TextInput(attrs={'class':'form-control'}),
             }
 
 class DateInput(forms.DateInput):
@@ -22,7 +22,7 @@ class ProfileForm(forms.ModelForm):
         fields = ('DOB', 'college', 'bio', 'profilepic')
 
         widgets = {
-            'DOB': DateInput(attrs={'class': 'form-control col-3'}),
-            'bio': forms.Textarea(attrs={'class':'form-control col-8'}),
-            'college' : forms.TextInput(attrs={'class':'form-control col-6'}),
+            'DOB': DateInput(attrs={'class': 'form-control '}),
+            'bio': forms.Textarea(attrs={'class':'form-control '}),
+            'college' : forms.TextInput(attrs={'class':'form-control '}),
             }

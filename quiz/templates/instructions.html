@@ -5,11 +5,19 @@
 {% endblock %}
 {% block content %}
 
-<div class="container" id="spinner">
+<div class="container" >
     <div class="row">
-        <div class="col-6"><h2> <u>{{ quiz_object.name }}</u></h2></div>
+        <div class="col-6"><h2 style="font-family:'Major Mono Display', monospace;
+color:#5D595D  ;"> <u>{{ quiz_object.name }}</u></h2>
+        </div>
+
     <div class="col-6">
-<h2 style="float:right;"><u>Quizmaster</u>: {{ quiz_object.quizmaster }}</h2></div></div>
+<h2 style="float:;font-family:'Major Mono Display', monospace;
+ color:#5D595D  "><u>Quizmaster</u>: {{ quiz_object.quizmaster }}</h2>
+    </div>
+
+
+    </div>
     <br>
 <div class="row">
     <div class="col-md-7">
@@ -19,7 +27,7 @@
   <div class="card-header">About</div>
   <div class="card-body">
 {#    <h5 class="card-title">Primary card title</h5>#}
-     <p class="card-text">{{ quiz_object.about|linebreaks }}</p>
+     <p class="card-text" >{{ quiz_object.about|linebreaks }}</p>
   </div>
 </div>
 
@@ -51,8 +59,8 @@
      </div>
 
     </div>
-    <div class="col-md-3">
-        <div class="container card" style="width: 28rem; padding:28px; margin:45px auto;">
+    <div class="col-md-5">
+        <div class="container card" style="width: ; padding:28px; margin:45px auto;">
     <form class="form-signin" method="POST" action="{% url 'quiz_auth' quizid=quiz_object.Quiz_id %}">
         {% csrf_token %}
         <div class="text-center">

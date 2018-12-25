@@ -15,7 +15,7 @@ Admin | {{user.username}}
 </style>
 {% if user.is_authenticated %}
 <div class="container-fluid row justify-content-between">
-    <div class="col-2 border-right" id="sidebar">
+    <div class="border-right" id="sidebar">
         <div class="row justify-content-center">
             <br>
             <img src="{{user.profile.image_url}}" height="200" style="width:auto; border-radius:50%; margin:15px 0;">
@@ -51,7 +51,7 @@ Admin | {{user.username}}
                 </div>
         </div>
     </div>
-    <div class="col-9">
+    <div class="container row">
         {% for quiz_object in quiz_objects %}
         <br>
         <div class="row border border-rounded box" style="padding:15px;">

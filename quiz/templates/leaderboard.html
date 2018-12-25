@@ -15,13 +15,13 @@ Leaderboard | {{quiz_object.Quiz_id}}
 </style>
 {% if user.is_authenticated %}
 <br><br>
-<div class="col-8 justify-content-end">
-        <a href="{% url 'export' quizid=quiz_object.Quiz_id %}" class="btn btn-danger" role="button">Expot CSV</a>
+<div class="row justify-content-center">
+        <a href="{% url 'export' quizid=quiz_object.Quiz_id %}" class="btn btn-danger" role="button">Export CSV</a>
 </div>
 <br>
 <div class="container box">
 <div class="row" style="padding:15px;">
-    <div class="row col-12 p-3 text-center">
+    <div class="row p-3 text-center">
         <h2 class="display-4 text-center">Leaderboard</h2>
         <br>
     </div>
@@ -32,8 +32,8 @@ Leaderboard | {{quiz_object.Quiz_id}}
     <div class="row col-12 text-center">
         <h6>Detailed Analysis of all the participants: </h5>
     </div>
-    <div class="row col-12">
-    <table class="table table-hover">
+    <div class="row col-12 table-responsive">
+    <table class="table table-hover ">
             <thead>
                 <tr>
                 <th scope="col-6">Participant </th>
