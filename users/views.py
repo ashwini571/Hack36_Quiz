@@ -31,7 +31,7 @@ def signup(request):
 
                 user = User.objects.get(username = request.POST['username'])
                 return render(request, 'signup.html', {'error': 'Username is already taken!'})
-                #
+
 
             except:
                try:
