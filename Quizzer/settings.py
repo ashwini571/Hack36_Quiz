@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'Quizzer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Quizoholic',
-        'USER': 'postgres',
-        'PASSWORD': 'lodulodu',
+        'NAME': 'hack36',
+        'USER': 'rohit',
+        'PASSWORD': 'qwerty',
         'HOST': 'localhost',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 
@@ -135,4 +135,10 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'binary.compatible@gmail.com'
+EMAIL_HOST_PASSWORD = '5139@Rohit.com'
+EMAIL_PORT = 587
