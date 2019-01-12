@@ -82,35 +82,39 @@ def profile(request):
 def login(request):
     if request.method == 'POST':
         #This is to handle the case when the user is disabled for having multiple session
-        user =     user = User.objects.get(username = request.POST['username'])
-        if user.is_active == False:
-            user.is_active = True
-            user.save()
-        user = auth.authenticate(username = request.POST['username'], password= request.POST['password'])
+        try:
+            user = User.objects.get(username = request.POST['username'])
+
+            if user.is_active == False:
+                user.is_active = True
+                user.save()
+            user = auth.authenticate(username = request.POST['username'], password= request.POST['password'])
 
 
-        if user is not None:
-            if user.profile.flag==True:
-                return render(request,'session_prevent.html',{'userroot':user.username})
+            if user is not None:
+                if user.profile.flag==True:
+                    return render(request,'session_prevent.html',{'userroot':user.username})
+                else:
+
+                    user.profile.flag=True
+                    user.profile.save()
+                    auth.login(request, user)
+
+                    item=Quiz.objects.all().order_by('name')
+                    paginator = Paginator(item, 5)  # Show 1o quizzes per page
+                    page = request.GET.get('page', 1)
+                    try:
+                        item = paginator.get_page(page)
+                    except PageNotAnInteger:
+                        item = paginator.get_page(1)
+                    except EmptyPage:
+                        item = paginator.get_page(paginator.num_pages)
+
+                    return render(request,'dashboard.html',{'quiz_object':item})
             else:
-
-                user.profile.flag=True
-                user.profile.save()
-                auth.login(request, user)
-
-                item=Quiz.objects.all().order_by('name')
-                paginator = Paginator(item, 5)  # Show 1o quizzes per page
-                page = request.GET.get('page', 1)
-                try:
-                    item = paginator.get_page(page)
-                except PageNotAnInteger:
-                    item = paginator.get_page(1)
-                except EmptyPage:
-                    item = paginator.get_page(paginator.num_pages)
-
-                return render(request,'dashboard.html',{'quiz_object':item})
-        else:
-            return render(request, 'home.html', {'error': 'Invalid Credentials! Please enter correct username and password.'})
+                return render(request, 'home.html', {'error': 'Invalid Credentials! Please enter correct username and password.'})
+        except User.DoesNotExist:
+             return render(request, 'home.html', {'error': 'Invalid Credentials! Please enter correct username and password.'})
     else:
         return redirect('dashboard')
 
