@@ -66,8 +66,8 @@ color:#5D595D  ;"> <u>{{ quiz_object.name }}</u></h2>
     <form class="form-signin" method="POST" action="{% url 'quiz_auth' quizid=quiz_object.Quiz_id %}">
         {% csrf_token %}
         <div class="text-center">
-              {{ today.time }}
-            {{ quiz_object.duration }}
+{#             now= {{ today.time }}#}
+{#            start_time={{ quiz_object.start_time.time }}#}
 
             <h1 class="h3 mb-3 font-weight-normal">Let's Start</h1>
         </div>
@@ -82,7 +82,7 @@ color:#5D595D  ;"> <u>{{ quiz_object.name }}</u></h2>
             <button class="btn btn-lg btn-primary btn-block" type="submit" id="sub">Start Quiz</button>
 
             {% else %}
-               <button class="btn btn-lg btn-primary btn-block disabled" type="submit" id="sub">Start Quiz</button>
+               <button class="btn btn-lg btn-primary btn-block disabled" disabled="disabled" type="submit" id="sub">Start Quiz</button>
            {% endif %}
 
 
@@ -94,7 +94,11 @@ color:#5D595D  ;"> <u>{{ quiz_object.name }}</u></h2>
 
 </div>
     <script>
-
+{#$("form").bind("keypress", function (e) {#}
+{#    if (e.keyCode == 13) {#}
+{#        return false;#}
+{#    }#}
+{#})#}
 
     </script>
 {% endblock %}
