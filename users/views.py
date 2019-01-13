@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect ,get_object_or_404
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import auth, messages
 from django.db import transaction
@@ -10,9 +10,9 @@ from .models import Profile
 import os
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-def destroy_prev_session(request):
 
-    user = User.objects.get(username = request.POST['username'])
+def destroy_prev_session(request):
+    user = User.objects.get(username=request.POST['username'])
     user.profile.flag = False
     user.profile.save()
    #The below line disables the user in order to login properly this must be set back again to true
