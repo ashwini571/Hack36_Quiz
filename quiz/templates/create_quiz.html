@@ -63,6 +63,7 @@ Quizzer|Create Quiz
                 <form method="post" enctype="multipart/form-data" action="{% url 'create_quiz'%}">
                     {% csrf_token %}
                     {{ quiz_form.as_p }}
+
                     <button type="submit" class="btn-lg btn-primary">Create</button>
                 </form>
             </div>

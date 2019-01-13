@@ -1,10 +1,11 @@
 from django import forms
 from .models import Quiz
+from datetimepicker.widgets import DateTimePicker
 
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ('Quiz_id', 'name', 'Test_Password', 'about', 'instructions', 'csv_file', 'positive', 'negative', 'duration','tags')
+        fields = ('Quiz_id', 'name', 'Test_Password', 'about', 'instructions', 'csv_file', 'positive', 'negative', 'duration','tags','start_time','end_time')
 
         widgets = {
             'about': forms.Textarea(attrs={'class':'form-control col-8'}),
@@ -17,4 +18,6 @@ class QuizForm(forms.ModelForm):
             'Quiz_id': forms.TextInput(attrs={'class': 'form-control col-6'}),
             'csv_file': forms.FileInput(attrs={'class': 'form-control col-5 btn btn-primary btn-sm'}),
             'tags':forms.TextInput(attrs={'class': 'form-control col-6','placeholder':'Separate tags with comma(,)'}),
+            'start_time': forms.DateTimeInput(attrs={'class':'form-control col-4','placeholder':'YYYY-MM-DD HH:MM'}),
+            'end_time': forms.DateTimeInput(attrs={'class':'form-control col-4','placeholder':'YYYY-MM-DD HH:MM'}),
             }

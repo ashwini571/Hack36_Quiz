@@ -8,7 +8,8 @@ import os, csv
 from random import shuffle
 from django.core.mail import send_mail
 from django.http import HttpResponse
-
+from datetime import datetime, date
+from django.utils.timezone import datetime, timedelta
 def search(request):
     print('inside search')
     try:
@@ -50,8 +51,17 @@ def start_quiz(request):
            user = request.user
            instruct = item.instructions
            instruct_list = instruct.split(";")
+           today =datetime.now()
+           temp = datetime.combine(date.min, today.time()) - datetime.combine(date.min,item.start_time.time())
+           print(temp)
+           if (temp < timedelta(minutes=5)):
+             print("hola")
+             margin = 1
+           else:
+               margin =0
 
-           return render(request, 'instructions.html', {'quiz_object': item, 'user': user ,'instruct_list' :instruct_list })
+
+           return render(request, 'instructions.html', {'quiz_object': item, 'user': user ,'instruct_list' :instruct_list ,'today':today,'margin':margin})
            # item=Quiz(Quiz_id=request.POST['quizid'],Test_password=request.POST['tPass'])
 
            # if item.Test_Password==request.POST['password']:
@@ -72,6 +82,7 @@ def start_quiz(request):
 
 def quiz_auth(request, quizid):
     item = Quiz.objects.get(Quiz_id=quizid)
+    item.duration = item.duration
     users=item.users_appeared.filter(pk=request.user.pk)
 
     if users.exists():
@@ -124,6 +135,8 @@ def create(request):
                     item.positive = request.POST['positive']
                     item.negative = request.POST['negative']
                     item.duration = request.POST['duration']
+                    item.start_time = request.POST['start_time']
+                    item.end_time = request.POST['end_time']
                     item.quizmaster = request.user
                     item.tags=request.POST['tags']
                     item.save()

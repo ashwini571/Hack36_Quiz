@@ -43,9 +43,11 @@ color:#5D595D  ;"> <u>{{ quiz_object.name }}</u></h2>
     <ol >
             <li class="text-muted" style="margin-bottom:10px;">All questions are compulsory.</li>
             <li class="text-muted" style="margin-bottom:10px;">There will {{ quiz_object.positive }} marks for correct answer and {{ quiz_object.negative }} will be deducted for wrong answer.</li>
-
+            <li class="text-muted" style="margin-bottom:10px;">The Quiz will start at : {{ quiz_object.start_time.time }}</li>
             <li class="text-muted" style="margin-bottom:10px;">You are advised to not indulge in wrong ethics.</li>
             <li class="text-muted" style="margin-bottom:10px;">In case of any discrepancy contact Quizmaster.</li>
+
+
             {% for instruct in instruct_list %}
             <li class="text-muted" style="margin-bottom:10px;">{{instruct}}</li>
 
@@ -64,6 +66,8 @@ color:#5D595D  ;"> <u>{{ quiz_object.name }}</u></h2>
     <form class="form-signin" method="POST" action="{% url 'quiz_auth' quizid=quiz_object.Quiz_id %}">
         {% csrf_token %}
         <div class="text-center">
+              {{ today.time }}
+            {{ quiz_object.duration }}
 
             <h1 class="h3 mb-3 font-weight-normal">Let's Start</h1>
         </div>
@@ -73,7 +77,15 @@ color:#5D595D  ;"> <u>{{ quiz_object.name }}</u></h2>
             <input type="password" id="inputPassword" class="form-control -p3" placeholder="Test-Password" required name="password"><br>
             <br>
 
+            {% if quiz_object.start_time.time <= today.time and margin %}
+
             <button class="btn btn-lg btn-primary btn-block" type="submit" id="sub">Start Quiz</button>
+
+            {% else %}
+               <button class="btn btn-lg btn-primary btn-block disabled" type="submit" id="sub">Start Quiz</button>
+           {% endif %}
+
+
         </form>
     </div>
 

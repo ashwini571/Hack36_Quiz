@@ -17,6 +17,9 @@ class Quiz(models.Model):
     duration = models.DurationField(default= timedelta())
     tags=models.TextField(max_length=2000)
     users_appeared = models.ManyToManyField(User, blank=True, related_name='users_appeared')
+    start_time = models.DateTimeField(auto_now_add=False)
+    end_time = models.DateTimeField(auto_now_add=False)
+
 
     def __str__(self):
             return self.name

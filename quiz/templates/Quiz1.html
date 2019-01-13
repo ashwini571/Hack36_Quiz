@@ -27,7 +27,7 @@
             <div class="row justify-content-around" >
                 <div class="col-md-9" style="text-align: left;padding-top: 3px;font-size:2rem;font-family: 'Monoton', cursive;color: #f5f6fa"> QuizOholic</div>
 
-                <div class="col-md-3"  style="padding-top: 3px; font-size:2rem;color: #f5f6fa;font-family: 'Cabin sketch', cursive; ">Time : <span id='timer' style="padding:2px;border-style: solid;border-color: whitesmoke; border-radius:12px;">{{ quiz_object.duration }}</span></div>
+                <div class="col-md-3"  style="padding-top: 3px; font-size:2rem;color: #f5f6fa;font-family: 'Cabin sketch', cursive; ">Time : <span id='timer' style="padding:2px;border-style: solid;border-color: whitesmoke; border-radius:12px;">{{ quiz_object.duration}}</span></div>
             </div>
         </div>
         <div class="container-fluid" style="background-color: #f1f2f6; position: relative;" id="sec_nav">
@@ -373,6 +373,7 @@ function quesFetch(id) {
         }
         else
         {
+
              total_seconds=total_seconds-1;
              hours=parseInt(total_seconds/3600);
              minutes=parseInt((total_seconds%3600)/60);
@@ -381,6 +382,7 @@ function quesFetch(id) {
             minutes = minutes < 10 ? "0" + minutes : minutes;
             seconds = seconds < 10 ? "0" + seconds : seconds;
              setTimeout("checkTime()",1000);
+
         }
         setCookie(forcookie,total_seconds,1);}
         setTimeout("checkTime()",1000);
