@@ -28,29 +28,3 @@ This Project can be utilized in a wide range of Educational Institutes like Coll
 The room for development is enourmous. We can first start by adding a code editor and an online judge. We can use webscraping to scrape the best quizzes from the net. ML can be implemented to predict quiz chices for students who are here to practice. Quiz-groups features can be added and some imitation of hackerearth's code arena can also be added.  
 
 The main reason behind choosing this project was that we can keep on working on it and improving it.  
-
-## **Instructions to run locally**  
-
-1. Install Python and some dev tools for Python
-- `$ sudo apt-get install python-pip python-dev build-essential`
-- `$ apt install Python3.6`
-- use easy_install for older versions of ubuntu e.g -$ easy_install python3-pip
-2. Install Pip
-- `$ apt install python3-pip`
-3. Install other requirements given` in requirements.txt file
-- `$ pip install requirements.txt
-4. Modify database engine,
-- Rename the database section in settings.py
-- add username and password and port accordingly
-- save changes
-5. Sync db and make superuser
-- `$ python manage.py makemigrations`
-- `$ python manage.py migrate`
-- `$ python manage.py createsuperuser`
-6. Collect Static files
-- `python manage.py collectstatic`
-7. Runserver
-- `$ python manage.py runserver`
-- `$ visit 127.0.0.1:8000`  
-
-**All Done :-)**
